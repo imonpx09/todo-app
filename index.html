@@ -1,25 +1,44 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>รายการสิ่งที่ต้องทำ</title>
-  <link rel="stylesheet" href="style.css"> <!-- เชื่อมโยงไฟล์ CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แอปพยากรณ์อากาศ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="container">
-    <h1>รายการสิ่งที่ต้องทำ</h1>
-
-    <div class="input-section">
-      <input type="text" id="taskInput" placeholder="เพิ่มรายการที่นี่...">
-      <button id="addTaskBtn">เพิ่ม</button>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="weather-card bg-white p-8 rounded-xl shadow-lg text-center">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">
+            <span role="img" aria-label="sun behind cloud">🌥️</span> แอปพยากรณ์อากาศ
+        </h1>
+		
+        <div class="mb-6">
+            <input type="text" id="cityInput" placeholder="ป้อนชื่อเมือง..." 
+				   class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700">			
+		</div>
+        <button id="getWeatherBtn" 
+		        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md">
+            ดูสภาพอากาศ
+        </button>
+		
+        <div id="weatherDisplay" class="mt-8 hidden">
+            <h2 id="cityName" class="text-4xl font-semibold text-gray-900 mb-2"></h2>
+            <p id="temperature" class="text-6xl font-bold text-blue-600 mb-4"></p>
+            <p id="description" class="text-2xl text-gray-700 capitalize"></p>
+            <p id="humidity" class="text-lg text-gray-600 mt-2"></p>
+            <p id="windSpeed" class="text-lg text-gray-600"></p>
+        </div>
+   
+   <div id="errorMessage" class="mt-8 text-red-600 font-medium hidden">
+    ไม่พบข้อมูลเมืองนี้ กรุณาลองอีกครั้ง
+        </div>
     </div>
-
-    <ul id="taskList">
-      <!-- รายการสิ่งที่ต้องทำจะถูกเพิ่มที่นี่โดย JavaScript -->
-    </ul>
-  </div>
-
-  <script src="script.js"></script> <!-- เชื่อมโยงไฟล์ JavaScript -->
+	
+     <!-- Link to external JavaScript file -->
+     <script src="script.js"></script>
 </body>
 </html>

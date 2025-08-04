@@ -1,86 +1,133 @@
-// Get references to HTML elements
-//อ้างถึงองค์ประกอบ HTML ที่ต้องการใช้งาน
-const taskInput = document.getElementById('taskInput');
-const addTaskBtn = document.getElementById('addTaskBtn');
-const taskList = document.getElementById('taskList');
+document.addEventListener('DOMContentLoaded', () => {
+    const cityInput = document.getElementById('cityInput');
+    const getWeatherBtn = document.getElementById('getWeatherBtn');
+    const weatherDisplay = document.getElementById('weatherDisplay');
+    const cityNameElem = document.getElementById('cityName');
+    const temperatureElem = document.getElementById('temperature');
+    const descriptionElem = document.getElementById('description');
+    const humidityElem = document.getElementById('humidity');
+    const windSpeedElem = document.getElementById('windSpeed');
+    const errorMessageElem = document.getElementById('errorMessage');
 
-// Function to add a new task
-//ฟังก์ชันสำหรับเพิ่มรายการสิ่งที่ต้องทำใหม่
-function addTask() {
-    const taskText = taskInput.value.trim(); // Get input value and remove leading/trailing whitespace
+    // IMPORTANT: Replace 'YOUR_API_KEY' with your actual API key from OpenWeatherMap or another weather service.
+    // You can get a free API key from https://openweathermap.org/api
+    const API_KEY = 'YOUR_API_KEY'; // Placeholder API Key
+    const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
-    // Check if the input is empty
-    //ตรวจสอบว่าช่องกรอกข้อความว่างเปล่าหรือไม่
-    if (taskText === '') {
-        alert('กรุณาป้อนรายการสิ่งที่ต้องทำ'); // Show an alert if empty
-        return; // Exit the function
-    }
+    getWeatherBtn.addEventListener('click', fetchWeatherData);
+    cityInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            fetchWeatherData();
+        }
+    });
 
-    // Create a new list item (<li>)
-    //สร้างองค์ประกอบรายการใหม่ (<li>)
-    const listItem = document.createElement('li');
+    async function fetchWeatherData() {
+        const city = cityInput.value.trim();
+        if (!city) {
+            displayError('กรุณาป้อนชื่อเมือง');
+            return;
+        }
+		
+		// Hide previous results and error message
+weatherDisplay.classList.add('hidden');
+errorMessageElem.classList.add('hidden');
 
-    // Create a span for the task text
-    //สร้าง span สำหรับข้อความรายการ
-    const taskSpan = document.createElement('span');
-    taskSpan.textContent = taskText; // Set the text content
+// Simulate API call with a placeholder for demonstration
+// In a real application, you would use fetch like this:
+// const url = `${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=th`;
+// try {
+//     const response = await fetch(url);
+//     if (!response.ok) {
+//         if (response.status === 404) {
+//             throw new Error('ไม่พบเมืองนี้');
+//         }
+//         throw new Error('เกิดข้อผิดพลาดในการดึงข้อมูลสภาพอากาศ');
+//     }
+//     const data = await response.json();
+//     displayWeather(data);
+// } catch (error) {
+//     displayError(error.message);
+// }
 
-// Create a "Complete" button
-// สร้างปุ่ม "เสร็จสิ้น"
-const completeBtn = document.createElement('button');
-completeBtn.textContent = 'เสร็จสิ้น';
-completeBtn.classList.add('complete-btn'); // Add a class for styling
-
-// Add event listener to the complete button
-// เพิ่ม Event Listener ให้กับปุ่ม "เสร็จสิ้น"
-completeBtn.addEventListener('click', () => {
-    listItem.classList.toggle('completed'); // Toggle 'completed' class on click
-    // If the task is completed, change button text and color
-    if (listItem.classList.contains('completed')) {
-        completeBtn.textContent = 'ยกเลิก';
-        completeBtn.style.backgroundColor = '#6c757d'; // Grey color
-    } else {
-        completeBtn.textContent = 'เสร็จสิ้น';
-        completeBtn.style.backgroundColor = '#007bff'; // Blue color
-    }
-});
-
-// Create a "Delete" button
-// สร้างปุ่ม "ลบ"
-const deleteBtn = document.createElement('button');
-deleteBtn.textContent = 'ลบ';
-deleteBtn.classList.add('delete-btn'); // Add a class for styling
-
-// Add event listener to the delete button
-// เพิ่ม Event Listener ให้กับปุ่ม "ลบ"
-deleteBtn.addEventListener('click', () => {
-    taskList.removeChild(listItem); // Remove the list item from the task list
-});
-
-// Append the task text and buttons to the list item
-// เพิ่มข้อความรายการและปุ่มต่างๆ เข้าไปในรายการ
-listItem.appendChild(taskSpan);
-listItem.appendChild(completeBtn);
-listItem.appendChild(deleteBtn);
-
-// Append the new list item to the task list (<ul>)
-// เพิ่มรายการใหม่เข้าไปในรายการสิ่งที่ต้องทำ (<ul>)
-taskList.appendChild(listItem);
-
-// Clear the input field after adding the task
-// ล้างช่องกรอกข้อความหลังจากเพิ่มรายการแล้ว
-taskInput.value = '';
+// Mock API response for demonstration purposes
+// Replace this with actual fetch logic when you have an API key
+console.log(`Fetching weather for: ${city}`);
+try {
+    const mockData = await simulateApiCall(city);
+    displayWeather(mockData);
+} catch (error) {
+    displayError(error.message);
+}	
 }
 
-// Add event listener to the "Add" button
-// เพิ่ม Event Listener ให้กับปุ่ม "เพิ่ม"
-addTaskBtn.addEventListener('click', addTask);
-
-// Allow adding tasks by pressing Enter key in the input field
-// อนุญาตให้เพิ่มรายการด้วยการกดปุ่ม Enter ในช่องกรอกข้อความ
-taskInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        addTask();
-    }
+// Simulate an asynchronous API call
+function simulateApiCall(city) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const lowerCaseCity = city.toLowerCase();
+            if (lowerCaseCity === 'bangkok' || lowerCaseCity === 'กรุงเทพ') {
+                resolve({
+                    name: 'Bangkok',
+                    main: {
+                        temp: 30.5,
+                        humidity: 75
+                    },
+                    weather: [{
+                        description: 'แผยฝน'
+                    }],
+                    wind: {
+                        speed: 3.2
+						}
+				});
+        } else if (lowerCaseCity === 'london' || lowerCaseCity === 'ลอนดอน') {
+            resolve({
+                name: 'London',
+                main: {
+                    temp: 18.2,
+                    humidity: 88
+                },
+                weather: [{
+                    description: 'มีเมฆมาก'
+                }],
+                wind: {
+                    speed: 5.1
+                }
+            });
+        } else if (lowerCaseCity === 'new york' || lowerCaseCity === 'นิวยอร์ก') {
+            resolve({
+                name: 'New York',
+                main: {
+                    temp: 25.0,
+                    humidity: 60
+                },
+                weather: [{
+                    description: 'แดดจัด'
+                }],
+                wind: {
+                    speed: 2.5
+                }
+            });
+        } else {
+            reject(new Error('ไม่พบเมืองนี้'));
+        }
+    }, 1000); // Simulate network delay
 });
-       
+}
+
+
+function displayWeather(data) {
+    cityNameElem.textContent = data.name;
+    temperatureElem.textContent = `${Math.round(data.main.temp)}°C`;
+    descriptionElem.textContent = data.weather[0].description;
+    humidityElem.textContent = `ความชื้น: ${data.main.humidity}%`;
+    windSpeedElem.textContent = `ความเร็วลม: ${data.wind.speed} m/s`;
+
+    weatherDisplay.classList.remove('hidden');
+}
+
+function displayError(message) {
+    errorMessageElem.textContent = message;
+    errorMessageElem.classList.remove('hidden');
+    weatherDisplay.classList.add('hidden'); // Ensure weather display is hidden
+}
+});
